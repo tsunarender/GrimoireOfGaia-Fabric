@@ -145,14 +145,14 @@ public final class FabricClient {
     private FabricClient() {}
 
     public static void register() {
-        BlockRenderLayerMap.INSTANCE.putBlock(GaiaRegistry.BUST_GORGON.get(), net.minecraft.client.renderer.RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.BUST_SPHINX.get(), RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GaiaRegistry.BUST_GORGON.get(), net.minecraft.client.renderer.net.minecraft.client.renderer.RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GaiaRegistry.BUST_SPHINX.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.BUST_VALKYRIE.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.BUST_VAMPIRE.get(), RenderType.cutout());
 
         ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.DOLL_CREEPER_GIRL.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.DOLL_ENDER_GIRL.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.DOLL_SLIME_GIRL.get(), net.minecraft.client.renderer.RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.DOLL_SLIME_GIRL.get(), net.minecraft.client.renderer.net.minecraft.client.renderer.RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.DOLL_MAID.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.DOLL_DULLAHAN.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.DOLL_MERMAID.get(), RenderType.cutout());
