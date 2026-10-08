@@ -2,7 +2,6 @@ package gaia.fabric;
 
 import gaia.GrimoireOfGaia;
 import gaia.registry.GaiaRegistry;
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
@@ -23,10 +22,10 @@ public final class GaiaCreativeTab {
         Registry.register(
                 BuiltInRegistries.CREATIVE_MODE_TAB,
                 KEY,
-                FabricItemGroup.builder()
+                CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0)
                         .icon(() -> new ItemStack(GaiaRegistry.DOLL_DRYAD.get()))
                         .title(Component.translatable("itemGroup.grimoireofgaia"))
-                        .entries((context, entries) -> GaiaRegistry.ITEMS.getEntries().forEach(holder ->
+                        .displayItems((context, entries) -> GaiaRegistry.ITEMS.getEntries().forEach(holder ->
                                 entries.accept(new ItemStack(holder.get()))))
                         .build()
         );
