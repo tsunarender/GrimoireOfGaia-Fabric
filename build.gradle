@@ -19,19 +19,10 @@ dependencies {
     mappings loom.officialMojangMappings()
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+    modImplementation(include("io.github.fabricators_of_create.Porting-Lib:porting_lib:${project.porting_lib_version}"))
     modCompileOnly "dev.emi:trinkets:3.10.0"
-
-    modImplementation(include("io.github.fabricators_of_create.Porting-Lib:porting_lib_base:${project.porting_lib_version}"))
-    modImplementation(include("io.github.fabricators_of_create.Porting-Lib:porting_lib_common:${project.porting_lib_version}"))
-    modImplementation(include("io.github.fabricators_of_create.Porting-Lib:porting_lib_registry:${project.porting_lib_version}"))
-    modImplementation(include("io.github.fabricators_of_create.Porting-Lib:porting_lib_attributes:${project.porting_lib_version}"))
-    modImplementation(include("io.github.fabricators_of_create.Porting-Lib:porting_lib_config:${project.porting_lib_version}"))
-    modImplementation(include("io.github.fabricators_of_create.Porting-Lib:porting_lib_entity:${project.porting_lib_version}"))
-    modImplementation(include("io.github.fabricators_of_create.Porting-Lib:porting_lib_fluids:${project.porting_lib_version}"))
-    modImplementation(include("io.github.fabricators_of_create.Porting-Lib:porting_lib_item_abilities:${project.porting_lib_version}"))
-    modImplementation(include("io.github.fabricators_of_create.Porting-Lib:porting_lib_tags:${project.porting_lib_version}"))
 }
-
 def upstreamZip = layout.buildDirectory.file("upstream/gaia-1.21.zip")
 def upstreamRoot = layout.buildDirectory.dir("upstream/source")
 def portedRoot = layout.buildDirectory.dir("ported")
