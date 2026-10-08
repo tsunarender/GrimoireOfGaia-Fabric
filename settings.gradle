@@ -1,0 +1,16 @@
+pluginManagement {
+    repositories {
+        maven { url = "https://maven.fabricmc.net/" }
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
+    repositories {
+        mavenCentral()
+        maven { url = "https://maven.fabricmc.net/" }
+        maven { url = "https://mvn.devos.one/releases/" }
+    }
+}
+rootProject.name = "GrimoireOfGaia4-Fabric"
