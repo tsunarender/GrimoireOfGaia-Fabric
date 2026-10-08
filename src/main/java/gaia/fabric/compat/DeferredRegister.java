@@ -30,9 +30,7 @@ public class DeferredRegister<T> {
     }
 
     public static <T> DeferredRegister<T> create(ResourceKey<? extends Registry<T>> key, String modId) {
-        Registry<T> registry = (Registry<T>) BuiltInRegistries.REGISTRY
-                .get(key.location())
-                .orElseThrow(() -> new IllegalArgumentException("Unknown registry " + key.location()));
+        Registry<T> registry = (Registry<T>) BuiltInRegistries.REGISTRY.get(key.location());
         return new DeferredRegister<>(registry, modId);
     }
 
@@ -60,7 +58,7 @@ public class DeferredRegister<T> {
             DeferredHolder holder = entry.getValue();
             ResourceLocation id = ResourceLocation.fromNamespaceAndPath(modId, entry.getKey());
             Object value = holder.get();
-            Registry.register(registry, id, value);
+            Registry.register(registry, id.toString(), (T) value);
             holder.setRegistered(value);
         }
     }
