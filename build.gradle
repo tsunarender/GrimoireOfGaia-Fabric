@@ -239,16 +239,89 @@ ${modifierEntries.join('\\n')}
 
         // Provide Fabric-side definitions for the Common Tags used by Gaia's NeoForge biome JSONs.
         def commonBiomeTagValues = [
-            "is_plains": ["#minecraft:is_plains"],
-            "is_forest": ["#minecraft:is_forest"],
-            "is_mountain": ["#minecraft:is_mountain"],
-            "is_cold": ["#minecraft:is_icy", "#minecraft:is_taiga"],
-            "is_hot": ["#minecraft:is_desert", "#minecraft:is_savanna", "#minecraft:is_jungle", "#minecraft:is_badlands"],
-            "is_aquatic": ["#minecraft:is_ocean", "#minecraft:is_river", "#minecraft:is_swamp"],
-            "is_sandy": ["#minecraft:is_desert", "#minecraft:is_beach", "#minecraft:is_badlands"],
-            "is_dense_vegetation": ["#minecraft:is_forest", "#minecraft:is_jungle", "#minecraft:is_taiga", "#minecraft:is_swamp"],
-            "is_sparse_vegetation": ["#minecraft:is_plains", "#minecraft:is_savanna", "#minecraft:is_badlands"],
-            "is_tree/coniferous": ["#minecraft:is_taiga"]
+            "is_mushroom": ["minecraft:mushroom_fields"],
+            "no_default_monsters": ["minecraft:mushroom_fields", "minecraft:deep_dark"],
+            "is_sandy": ["minecraft:desert", "minecraft:badlands", "minecraft:wooded_badlands", "minecraft:eroded_badlands", "minecraft:beach"],
+            "is_plateau": ["minecraft:wooded_badlands", "minecraft:savanna_plateau", "minecraft:cherry_grove", "minecraft:meadow"],
+            "is_mountain": [
+                "#minecraft:is_mountain",
+                "minecraft:snowy_slopes", "minecraft:meadow", "minecraft:grove", "minecraft:cherry_grove",
+                "minecraft:jagged_peaks", "minecraft:frozen_peaks", "minecraft:stony_peaks"
+            ],
+            "is_cold_overworld": [
+                "minecraft:taiga", "minecraft:old_growth_pine_taiga", "minecraft:old_growth_spruce_taiga",
+                "minecraft:windswept_hills", "minecraft:windswept_gravelly_hills", "minecraft:windswept_forest",
+                "minecraft:snowy_plains", "minecraft:ice_spikes", "minecraft:grove", "minecraft:snowy_slopes",
+                "minecraft:jagged_peaks", "minecraft:frozen_peaks", "minecraft:stony_shore", "minecraft:snowy_beach",
+                "minecraft:snowy_taiga", "minecraft:frozen_river", "minecraft:cold_ocean", "minecraft:frozen_ocean",
+                "minecraft:deep_cold_ocean", "minecraft:deep_frozen_ocean"
+            ],
+            "is_cold_end": ["minecraft:the_end", "minecraft:small_end_islands", "minecraft:end_midlands", "minecraft:end_highlands", "minecraft:end_barrens"],
+            "is_cold": [
+                "minecraft:taiga", "minecraft:old_growth_pine_taiga", "minecraft:old_growth_spruce_taiga",
+                "minecraft:windswept_hills", "minecraft:windswept_gravelly_hills", "minecraft:windswept_forest",
+                "minecraft:snowy_plains", "minecraft:ice_spikes", "minecraft:grove", "minecraft:snowy_slopes",
+                "minecraft:jagged_peaks", "minecraft:frozen_peaks", "minecraft:stony_shore", "minecraft:snowy_beach",
+                "minecraft:snowy_taiga", "minecraft:frozen_river", "minecraft:cold_ocean", "minecraft:frozen_ocean",
+                "minecraft:deep_cold_ocean", "minecraft:deep_frozen_ocean",
+                "minecraft:the_end", "minecraft:small_end_islands", "minecraft:end_midlands", "minecraft:end_highlands", "minecraft:end_barrens"
+            ],
+            "is_hot_overworld": [
+                "minecraft:jungle", "minecraft:bamboo_jungle", "minecraft:sparse_jungle", "minecraft:desert",
+                "minecraft:badlands", "minecraft:wooded_badlands", "minecraft:eroded_badlands", "minecraft:savanna",
+                "minecraft:savanna_plateau", "minecraft:windswept_savanna", "minecraft:stony_peaks",
+                "minecraft:mushroom_fields", "minecraft:warm_ocean"
+            ],
+            "is_hot": [
+                "minecraft:jungle", "minecraft:bamboo_jungle", "minecraft:sparse_jungle", "minecraft:desert",
+                "minecraft:badlands", "minecraft:wooded_badlands", "minecraft:eroded_badlands", "minecraft:savanna",
+                "minecraft:savanna_plateau", "minecraft:windswept_savanna", "minecraft:stony_peaks",
+                "minecraft:mushroom_fields", "minecraft:warm_ocean",
+                "minecraft:nether_wastes", "minecraft:crimson_forest", "minecraft:warped_forest",
+                "minecraft:soul_sand_valley", "minecraft:basalt_deltas"
+            ],
+            "is_sparse_vegetation": [
+                "minecraft:wooded_badlands", "minecraft:savanna", "minecraft:savanna_plateau",
+                "minecraft:sparse_jungle", "minecraft:windswept_savanna", "minecraft:windswept_forest",
+                "minecraft:windswept_hills", "minecraft:windswept_gravelly_hills", "minecraft:snowy_slopes",
+                "minecraft:jagged_peaks", "minecraft:frozen_peaks"
+            ],
+            "is_dense_vegetation": [
+                "minecraft:dark_forest", "minecraft:old_growth_birch_forest", "minecraft:old_growth_spruce_taiga",
+                "minecraft:jungle", "minecraft:bamboo_jungle", "minecraft:mangrove_swamp"
+            ],
+            "is_coniferous_tree": ["#minecraft:is_taiga", "minecraft:grove"],
+            "is_snowy": [
+                "minecraft:snowy_beach", "minecraft:snowy_plains", "minecraft:ice_spikes", "minecraft:snowy_taiga",
+                "minecraft:grove", "minecraft:snowy_slopes", "minecraft:jagged_peaks", "minecraft:frozen_peaks"
+            ],
+            "is_cold_overworld": [
+                "minecraft:taiga", "minecraft:old_growth_pine_taiga", "minecraft:old_growth_spruce_taiga",
+                "minecraft:windswept_hills", "minecraft:windswept_gravelly_hills", "minecraft:windswept_forest",
+                "minecraft:snowy_plains", "minecraft:ice_spikes", "minecraft:grove", "minecraft:snowy_slopes",
+                "minecraft:jagged_peaks", "minecraft:frozen_peaks", "minecraft:stony_shore", "minecraft:snowy_beach",
+                "minecraft:snowy_taiga", "minecraft:frozen_river", "minecraft:cold_ocean", "minecraft:frozen_ocean",
+                "minecraft:deep_cold_ocean", "minecraft:deep_frozen_ocean"
+            ],
+            "is_hot_overworld": [
+                "minecraft:jungle", "minecraft:bamboo_jungle", "minecraft:sparse_jungle", "minecraft:desert",
+                "minecraft:badlands", "minecraft:wooded_badlands", "minecraft:eroded_badlands", "minecraft:savanna",
+                "minecraft:savanna_plateau", "minecraft:windswept_savanna", "minecraft:stony_peaks",
+                "minecraft:mushroom_fields", "minecraft:warm_ocean"
+            ],
+            "is_aquatic": [
+                "#minecraft:is_ocean", "#minecraft:is_river"
+            ],
+            "is_swamp": ["minecraft:swamp", "minecraft:mangrove_swamp"],
+            "is_spooky": ["minecraft:dark_forest", "minecraft:pale_garden", "minecraft:deep_dark"],
+            "is_plains": ["minecraft:plains", "minecraft:sunflower_plains"],
+            "is_rare": [
+                "minecraft:sunflower_plains", "minecraft:flower_forest", "minecraft:old_growth_birch_forest",
+                "minecraft:old_growth_spruce_taiga", "minecraft:bamboo_jungle", "minecraft:sparse_jungle",
+                "minecraft:eroded_badlands", "minecraft:savanna_plateau", "minecraft:windswept_savanna",
+                "minecraft:ice_spikes", "minecraft:windswept_gravelly_hills", "minecraft:pale_garden",
+                "minecraft:mushroom_fields", "minecraft:deep_dark"
+            ]
         ]
 
         def usedCommonTags = [] as Set
