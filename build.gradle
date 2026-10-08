@@ -128,9 +128,10 @@ tasks.register("prepareUpstream") {
                 s = s.replace(
                     "EventHooks.finalizeMobSpawn(summon, (ServerLevel) level, level.getCurrentDifficultyAt(spawnPos), MobSpawnType.MOB_SUMMONED, (SpawnGroupData) null);",
                     "summon.finalizeSpawn((ServerLevel) level, level.getCurrentDifficultyAt(spawnPos), MobSpawnType.MOB_SUMMONED, null);");
-                s = s.replace(
-                    "CompoundTag tag = summon.getPersistentData();\n\t\t\ttag.putBoolean(Reference.SUMMONED_TAG, true);\n\t\t\ttag.putUUID(Reference.SUMMONER_TAG, livingEntity.getUUID());",
-                    "if (summon instanceof AbstractGaiaEntity gaiaSummon) {\n\t\t\t\tgaiaSummon.setStaffSummoned(true);\n\t\t\t\tgaiaSummon.setStaffSummoner(livingEntity.getUUID());\n\t\t\t}");
+                s = s.replaceAll(
+                    /CompoundTag tag = summon\.getPersistentData\(\);\s*tag\.putBoolean\(Reference\.SUMMONED_TAG, true\);\s*tag\.putUUID\(Reference\.SUMMONER_TAG, livingEntity\.getUUID\(\)\);/,
+                    "if (summon instanceof AbstractGaiaEntity gaiaSummon) {\\n\\t\\t\\t\\tgaiaSummon.setStaffSummoned(true);\\n\\t\\t\\t\\tgaiaSummon.setStaffSummoner(livingEntity.getUUID());\\n\\t\\t\\t}"
+                );
                 s = s.replace(
                     "!tag.contains(Reference.SUMMONED_TAG)",
                     "!(summon instanceof AbstractGaiaEntity gaiaSummon && gaiaSummon.isStaffSummoned())");
