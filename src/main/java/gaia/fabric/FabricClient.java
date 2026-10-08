@@ -129,6 +129,7 @@ import gaia.client.renderer.prop.ChestRenderer;
 import gaia.client.renderer.prop.CyanFlowerRenderer;
 import gaia.registry.GaiaRegistry;
 import net.minecraft.client.model.HorseModel;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
@@ -145,24 +146,24 @@ public final class FabricClient {
     private FabricClient() {}
 
     public static void register() {
-        BlockRenderLayerMap.INSTANCE.putBlock(GaiaRegistry.BUST_GORGON.get(), net.minecraft.client.renderer.net.minecraft.client.renderer.net.minecraft.client.renderer.RenderType.cutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GaiaRegistry.BUST_SPHINX.get(), net.minecraft.client.renderer.RenderType.cutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GaiaRegistry.BUST_VALKYRIE.get(), net.minecraft.client.renderer.RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.BUST_VAMPIRE.get(), net.minecraft.client.renderer.RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GaiaRegistry.BUST_GORGON.get(), RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GaiaRegistry.BUST_SPHINX.get(), RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GaiaRegistry.BUST_VALKYRIE.get(), RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GaiaRegistry.BUST_VAMPIRE.get(), RenderType.cutout());
 
-        ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.DOLL_CREEPER_GIRL.get(), net.minecraft.client.renderer.RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.DOLL_ENDER_GIRL.get(), net.minecraft.client.renderer.RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.DOLL_SLIME_GIRL.get(), net.minecraft.client.renderer.net.minecraft.client.renderer.net.minecraft.client.renderer.RenderType.translucent());
-        ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.DOLL_MAID.get(), net.minecraft.client.renderer.RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.DOLL_DULLAHAN.get(), net.minecraft.client.renderer.RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.DOLL_MERMAID.get(), net.minecraft.client.renderer.RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.DOLL_NINE_TAILS.get(), net.minecraft.client.renderer.RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.DOLL_DRYAD.get(), net.minecraft.client.renderer.RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GaiaRegistry.DOLL_CREEPER_GIRL.get(), RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GaiaRegistry.DOLL_ENDER_GIRL.get(), RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GaiaRegistry.DOLL_SLIME_GIRL.get(), RenderType.translucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(GaiaRegistry.DOLL_MAID.get(), RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GaiaRegistry.DOLL_DULLAHAN.get(), RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GaiaRegistry.DOLL_MERMAID.get(), RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GaiaRegistry.DOLL_NINE_TAILS.get(), RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GaiaRegistry.DOLL_DRYAD.get(), RenderType.cutout());
 
-        ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.DECO_GARDEN_GNOME.get(), net.minecraft.client.renderer.RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.DECO_MANDRAGORA_POT.get(), net.minecraft.client.renderer.RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.BUST_MINOTAUR.get(), net.minecraft.client.renderer.RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.DECO_NEST_HARPY.get(), net.minecraft.client.renderer.RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GaiaRegistry.DECO_GARDEN_GNOME.get(), RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GaiaRegistry.DECO_MANDRAGORA_POT.get(), RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GaiaRegistry.BUST_MINOTAUR.get(), RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GaiaRegistry.DECO_NEST_HARPY.get(), RenderType.cutout());
 
         {
             ItemProperties.register(GaiaRegistry.STONE_SHIELD.get(), ResourceLocation.parse("blocking"), (stack, level, livingEntity, i) ->
