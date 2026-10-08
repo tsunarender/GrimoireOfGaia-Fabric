@@ -61,9 +61,13 @@ tasks.register("prepareUpstream") {
             }
         }
 
-        def sourceRoot = new File(extractDir, "GrimoireOfGaia-1.21")
-        if (!sourceRoot.exists()) {
+        def sourceRoot = extractDir.listFiles()?.find { it.isDirectory() && it.name.startsWith("GrimoireOfGaia-") }
+        if (sourceRoot == null) {
             copy { from zipTree(zipFile); into extractDir }
+            sourceRoot = extractDir.listFiles()?.find { it.isDirectory() && it.name.startsWith("GrimoireOfGaia-") }
+        }
+        if (sourceRoot == null || !new File(sourceRoot, "src/main").exists()) {
+            throw new GradleException("Could not locate upstream Grimoire of Gaia source in " + extractDir)
         }
 
         def destination = portedRoot.get().asFile
