@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "grimoireofgaia",
+  "version": "${version}",
+  "name": "Grimoire of Gaia 4",
+  "description": "Adds mobs, monsters and monster girls.",
+  "authors": ["Silentine", "Mrbysco", "Fabric port by tsunarender"],
+  "license": "Assets: ARR, Code: CC0",
+  "icon": "assets/grimoireofgaia/logo.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["gaia.fabric.GrimoireOfGaiaFabric"],
+    "client": ["gaia.fabric.GrimoireOfGaiaFabricClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.7",
+    "minecraft": "1.21.1",
+    "fabric-api": "*"
+  }
+}
