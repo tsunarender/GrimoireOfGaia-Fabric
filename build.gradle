@@ -257,6 +257,7 @@ ${modifierEntries.join('\\n')}
                 "minecraft:deep_cold_ocean", "minecraft:deep_frozen_ocean"
             ],
             "is_cold_end": ["minecraft:the_end", "minecraft:small_end_islands", "minecraft:end_midlands", "minecraft:end_highlands", "minecraft:end_barrens"],
+            "is_dry_end": ["minecraft:the_end", "minecraft:small_end_islands", "minecraft:end_midlands", "minecraft:end_highlands", "minecraft:end_barrens"],
             "is_cold": [
                 "minecraft:taiga", "minecraft:old_growth_pine_taiga", "minecraft:old_growth_spruce_taiga",
                 "minecraft:windswept_hills", "minecraft:windswept_gravelly_hills", "minecraft:windswept_forest",
