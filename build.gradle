@@ -121,12 +121,18 @@ tasks.register("prepareUpstream") {
             // Remove NeoForge event annotations/imports from excluded handlers or passive classes.
             s = s.replace("javax.annotation.Nullable", "org.jetbrains.annotations.Nullable")
 
-            s = s.replace("import gaia.attachment.AttachmentHandler;\\n", "")
+            s = s.replace("import gaia.attachment.AttachmentHandler;", "")
             s = s.replace("@SubscribeEvent", "")
             s = s.replace("@EventBusSubscriber", "")
             s = s.readLines().findAll { line -> !line.trim().startsWith("import net.neoforged.") }.join("\n")
 
             // Preserve summon state without NeoForge persistent data/attachments.
+            if (f.name == "Bee.java") {
+                s = s.replace("import gaia.attachment.AttachmentHandler;", "")
+                s = s.replace("Friended friended = AttachmentHandler.getFriended(this);", "boolean __gaiaFriendly = isFriendly();")
+                s = s.replace("if (!friended.isFriendly())", "if (!__gaiaFriendly)")
+            }
+
             if (f.name == "AbstractGaiaEntity.java") {
                 s = s.replace("protected Goal targetPlayerGoal;",
                     "protected Goal targetPlayerGoal;\n\tprivate final Friended friendedData = new Friended();\n\tprivate boolean staffSummoned = false;\n\tprivate UUID staffSummoner = null;")
