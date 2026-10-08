@@ -119,6 +119,8 @@ tasks.register("prepareUpstream") {
                           "net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded(\"patchouli\")")
 
             // Remove NeoForge event annotations/imports from excluded handlers or passive classes.
+            s = s.replace("javax.annotation.Nullable", "org.jetbrains.annotations.Nullable")
+
             s = s.replace("import gaia.attachment.AttachmentHandler;\\n", "")
             s = s.replace("@SubscribeEvent", "")
             s = s.replace("@EventBusSubscriber", "")
