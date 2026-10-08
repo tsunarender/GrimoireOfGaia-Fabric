@@ -21,6 +21,7 @@ public final class GrimoireOfGaiaFabric implements ModInitializer {
         ConfigRegistry.registerConfig("grimoireofgaia", ModConfig.Type.COMMON, GaiaConfig.commonSpec);
 
         FabricSpawns.registerAttributesAndSpawns();
+        FabricBiomeSpawns.register();
         FabricEvents.register();
         if (FabricLoader.getInstance().isModLoaded("trinkets")) {
             TrinketsCompat.register();
