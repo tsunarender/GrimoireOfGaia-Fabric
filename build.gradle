@@ -1,0 +1,97 @@
+plugins {
+    id 'fabric-loom' version '1.10.5'
+    id 'maven-publish'
+}
+version = project.mod_version
+group = project.maven_group
+base { archivesName = project.archives_base_name }
+repositories { mavenCentral() }
+dependencies {
+    minecraft "com.mojang:minecraft:\${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:\${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:\${project.fabric_api_version}"
+}
+
+def upstreamZip = layout.buildDirectory.file("upstream/gaia-1.21.zip")
+def upstreamRoot = layout.buildDirectory.dir("upstream/source")
+def portedRoot = layout.buildDirectory.dir("ported")
+
+tasks.register("prepareUpstream") {
+    outputs.dir(portedRoot)
+    doLast {
+        def zipFile = upstreamZip.get().asFile
+        def extractDir = upstreamRoot.get().asFile
+        zipFile.parentFile.mkdirs()
+        extractDir.mkdirs()
+        if (!zipFile.exists()) {
+            new URL("https://codeload.github.com/Silentine/GrimoireOfGaia/zip/refs/heads/1.21").withInputStream { input ->
+                zipFile.withOutputStream { output -> output << input }
+            }
+        }
+        def sourceRoot = new File(extractDir, "GrimoireOfGaia-1.21")
+        if (!sourceRoot.exists()) {
+            copy { from zipTree(zipFile); into extractDir }
+        }
+        def destination = portedRoot.get().asFile
+        delete destination
+        destination.mkdirs()
+        def excluded = [
+            "src/main/java/gaia/GrimoireOfGaia.java",
+            "src/main/java/gaia/config/GaiaConfig.java",
+            "src/main/java/gaia/attachment/AttachmentHandler.java",
+            "src/main/java/gaia/attachment/friended/Friended.java",
+            "src/main/java/gaia/registry/GaiaSpawning.java",
+            "src/main/java/gaia/registry/GaiaDataSerializers.java",
+            "src/main/java/gaia/registry/GaiaModifiers.java",
+            "src/main/java/gaia/modifier/**",
+            "src/main/java/gaia/handler/**",
+            "src/main/java/gaia/compat/curios/**",
+            "src/main/java/gaia/datagen/**"
+        ]
+        copy {
+            from sourceRoot
+            into destination
+            exclude excluded
+            exclude "src/main/resources/META-INF/neoforge.mods.toml"
+            exclude "src/main/resources/META-INF/accesstransformer.cfg"
+            exclude "src/main/resources/data/grimoireofgaia/neoforge/**"
+        }
+        fileTree(new File(destination, "src/main/java")).matching { include "**/*.java" }.files.each { f ->
+            def s = f.getText("UTF-8")
+            s = s.replace("import net.neoforged.neoforge.common.ItemAbilities;\n", "")
+            s = s.replace("import net.neoforged.neoforge.fluids.FluidType;\n", "")
+            s = s.replace(".canPerformAction(ItemAbilities.SHIELD_BLOCK)", ".is(net.minecraft.world.item.Items.SHIELD)")
+            s = s.replace("isPushedByFluid(FluidType type)", "isPushedByFluid()")
+            s = s.replace("DeferredRegister.create(Registries.CREATIVE_MODE_TAB, GrimoireOfGaia.MOD_ID)",
+                    "DeferredRegister.create(BuiltInRegistries.CREATIVE_MODE_TAB, GrimoireOfGaia.MOD_ID)")
+            f.write(s, "UTF-8")
+        }
+        copy { from project.file("src/main/java"); into new File(destination, "src/main/java") }
+        copy { from project.file("src/main/resources"); into new File(destination, "src/main/resources") }
+        copy {
+            from new File(sourceRoot, "src/generated/resources")
+            into new File(destination, "src/generated/resources")
+            exclude "data/grimoireofgaia/neoforge/**"
+        }
+    }
+}
+sourceSets {
+    main {
+        java { srcDir new File(portedRoot.get().asFile, "src/main/java") }
+        resources {
+            srcDir new File(portedRoot.get().asFile, "src/main/resources")
+            srcDir new File(portedRoot.get().asFile, "src/generated/resources")
+        }
+    }
+}
+tasks.named("compileJava").configure { dependsOn tasks.named("prepareUpstream") }
+tasks.named("processResources").configure {
+    dependsOn tasks.named("prepareUpstream")
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    filesMatching("fabric.mod.json") { expand(version: project.version) }
+}
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+    options.release = 21
+}
