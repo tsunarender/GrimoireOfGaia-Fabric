@@ -153,6 +153,7 @@ tasks.register("prepareUpstream") {
                 s = s.replace("protected Goal targetPlayerGoal;",
                     "protected Goal targetPlayerGoal;\n\tprivate final Friended friendedData = new Friended();\n\tprivate boolean staffSummoned = false;\n\tprivate UUID staffSummoner = null;")
                 s = s.replace("AttachmentHandler.getFriended(this)", "friendedData")
+                s = s.replace("public void onFriendlyChange(IFriended cap)", "public Friended getFabricFriended() { return friendedData; }\n\n\tpublic void onFriendlyChange(IFriended cap)")
                 s = s.replace('tag.putInt("Variant", getVariant());',
                     'tag.putInt("Variant", getVariant());\n\t\ttag.put("Friended", friendedData.serializeNBT());\n\t\ttag.putBoolean("StaffSummoned", staffSummoned);\n\t\tif (staffSummoner != null) tag.putUUID("StaffSummoner", staffSummoner);')
                 s = s.replace('setVariant(variant);\n\t\t}\n\t\tsetupFriendGoals',
