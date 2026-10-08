@@ -77,6 +77,73 @@ public final class FabricSpawns {
 
     public static void registerAttributesAndSpawns() {
 
+        // Fabric requires default attributes to be registered explicitly for every LivingEntity type.
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.ANT_HILL.getEntityType(), AntHill.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.ANT_WORKER.getEntityType(), AntWorker.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.ANT_SALVAGER.getEntityType(), AntSalvager.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.ARACHNE.getEntityType(), Arachne.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.ANUBIS.getEntityType(), Anubis.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.BANSHEE.getEntityType(), Banshee.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.BEE.getEntityType(), Bee.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.BEHENDER.getEntityType(), Behender.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.BONE_KNIGHT.getEntityType(), BoneKnight.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.CENTAUR.getEntityType(), Centaur.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.CHEST.getEntityType(), Chest.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.COBBLE_GOLEM.getEntityType(), CobbleGolem.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.COBBLESTONE_GOLEM.getEntityType(), CobblestoneGolem.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.CREEP.getEntityType(), Creep.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.CYCLOPS.getEntityType(), Cyclops.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.CYAN_FLOWER.getEntityType(), CyanFlower.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.CECAELIA.getEntityType(), Cecaelia.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.DEATHWORD.getEntityType(), Deathword.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.DRYAD.getEntityType(), Dryad.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.DULLAHAN.getEntityType(), Dullahan.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.DWARF.getEntityType(), Dwarf.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.ENDER_EYE.getEntityType(), EnderEye.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.ENDER_DRAGON_GIRL.getEntityType(), EnderDragonGirl.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.FLESH_LICH.getEntityType(), FleshLich.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.GELATINOUS_SLIME.getEntityType(), GelatinousSlime.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.GOBLIN.getEntityType(), Goblin.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.GOBLIN_FERAL.getEntityType(), GoblinFeral.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.GRAVEMITE.getEntityType(), GraveMite.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.GRYPHON.getEntityType(), Gryphon.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.HARPY.getEntityType(), Harpy.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.HUNTER.getEntityType(), Hunter.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.KOBOLD.getEntityType(), Kobold.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.MANDRAGORA.getEntityType(), Mandragora.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.MATANGO.getEntityType(), Matango.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.MERMAID.getEntityType(), Mermaid.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.MINOTAUR.getEntityType(), Minotaur.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.MINOTAURUS.getEntityType(), Minotaurus.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.MUMMY.getEntityType(), Mummy.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.MIMIC.getEntityType(), Mimic.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.NAGA.getEntityType(), Naga.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.NINE_TAILS.getEntityType(), NineTails.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.ONI.getEntityType(), Oni.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.ORC.getEntityType(), Orc.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.SATYRESS.getEntityType(), Satyress.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.SHAMAN.getEntityType(), Shaman.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.SHARKO.getEntityType(), Sharko.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.SIREN.getEntityType(), Siren.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.SLUDGE_GIRL.getEntityType(), SludgeGirl.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.SPHINX.getEntityType(), Sphinx.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.SPORELING.getEntityType(), Sporeling.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.SPRIGGAN.getEntityType(), Spriggan.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.SUCCUBUS.getEntityType(), Succubus.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.TOAD.getEntityType(), Toad.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.VALKYRIE.getEntityType(), Valkyrie.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.WERECAT.getEntityType(), Werecat.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.WITCH.getEntityType(), Witch.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.WITHER_COW.getEntityType(), WitherCow.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.WIZARD_HARPY.getEntityType(), WizardHarpy.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.YUKI_ONNA.getEntityType(), YukiOnna.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.HORSE.getEntityType(), GaiaHorse.createBaseHorseAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.TRADER.getEntityType(), Trader.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.CREEPER_GIRL.getEntityType(), CreeperGirl.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.ENDER_GIRL.getEntityType(), EnderGirl.createAttributes());
+        FabricDefaultAttributeRegistry.register(GaiaRegistry.SLIME_GIRL.getEntityType(), SlimeGirl.createAttributes());
+
+
 
         SpawnPlacements.register(GaiaRegistry.ANT_HILL.getEntityType(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AntHill::checkAntHillSpawnRules);
         SpawnPlacements.register(GaiaRegistry.ANT_WORKER.getEntityType(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AntWorker::checkAntWorkerSpawnRules);
