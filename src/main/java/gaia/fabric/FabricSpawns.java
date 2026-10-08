@@ -1,6 +1,7 @@
 package gaia.fabric;
 
 import gaia.GrimoireOfGaia;
+import gaia.registry.GaiaRegistry;
 import gaia.entity.AntSalvager;
 import gaia.entity.AntWorker;
 import gaia.entity.Anubis;
