@@ -25,7 +25,7 @@ public final class GaiaCreativeTab {
                 KEY,
                 FabricItemGroup.builder()
                         .icon(() -> new ItemStack(GaiaRegistry.DOLL_DRYAD.get()))
-                        .displayName(Component.translatable("itemGroup.grimoireofgaia"))
+                        .title(Component.translatable("itemGroup.grimoireofgaia"))
                         .entries((context, entries) -> GaiaRegistry.ITEMS.getEntries().forEach(holder ->
                                 entries.accept(new ItemStack(holder.get()))))
                         .build()
