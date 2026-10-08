@@ -2,6 +2,7 @@ package gaia.fabric;
 
 import gaia.GrimoireOfGaia;
 import gaia.registry.GaiaRegistry;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
