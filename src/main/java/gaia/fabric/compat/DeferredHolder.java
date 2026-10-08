@@ -4,6 +4,7 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 public class DeferredHolder<R, T extends R> implements Supplier<T> {
+    private String name;
     private final Supplier<? extends T> supplier;
     private T value;
 
@@ -16,6 +17,9 @@ public class DeferredHolder<R, T extends R> implements Supplier<T> {
         if (value == null) value = supplier.get();
         return value;
     }
+
+    public String getName() { return name; }
+    void setName(String name) { this.name = name; }
 
     void setRegistered(T value) {
         this.value = value;
