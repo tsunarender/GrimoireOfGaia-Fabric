@@ -77,6 +77,10 @@ tasks.register("prepareUpstream") {
             exclude "src/main/resources/data/grimoireofgaia/neoforge/**"
         }
 
+        // Overlay Fabric-specific sources before applying the compatibility rewrites,
+        // so local Fabric sources are compiled from the prepared tree as well.
+        copy { from project.file("src/main/java"); into new File(destination, "src/main/java") }
+
         fileTree(new File(destination, "src/main/java")).matching { include "**/*.java" }.files.each { f ->
             def s = f.getText("UTF-8")
 
@@ -136,7 +140,6 @@ tasks.register("prepareUpstream") {
             f.write(s, "UTF-8")
         }
 
-        copy { from project.file("src/main/java"); into new File(destination, "src/main/java") }
         copy { from project.file("src/main/resources"); into new File(destination, "src/main/resources") }
         def quoteJavaString = { value ->
             '"' + value.toString().replace('\\', '\\\\').replace('"', '\\"') + '"'
@@ -261,10 +264,9 @@ tasks.register("prepareUpstream") {
 
 sourceSets {
     main {
-        java { srcDir new File(portedRoot.get().asFile, "src/main/java") }
+        java { setSrcDirs([new File(portedRoot.get().asFile, "src/main/java")]) }
         resources {
-            srcDir new File(portedRoot.get().asFile, "src/main/resources")
-            srcDir new File(portedRoot.get().asFile, "src/generated/resources")
+            srcDirs = [new File(portedRoot.get().asFile, "src/main/resources"), new File(portedRoot.get().asFile, "src/generated/resources")]
         }
     }
 }
