@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 
 public final class GaiaCreativeTab {
@@ -26,6 +27,7 @@ public final class GaiaCreativeTab {
                 FabricItemGroup.builder()
                         .title(Component.literal("Grimoire of Gaia"))
                         .icon(() -> new ItemStack(GaiaRegistry.DOLL_DRYAD.get()))
+                        .withTabsBefore(CreativeModeTabs.SPAWN_EGGS)
                         .displayItems((context, entries) -> GaiaRegistry.ITEMS.getEntries().forEach(holder ->
                                 entries.accept(new ItemStack(holder.get()))))
                         .build()
