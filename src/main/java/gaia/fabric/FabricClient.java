@@ -132,27 +132,27 @@ import net.minecraft.client.model.HorseModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
+import static gaia.client.ClientHandler.*;
 
 public final class FabricClient {
     private FabricClient() {}
 
     public static void register() {
-        ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.BUST_GORGON.get(), RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GaiaRegistry.BUST_GORGON.get(), net.minecraft.client.renderer.RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.BUST_SPHINX.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.BUST_VALKYRIE.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.BUST_VAMPIRE.get(), RenderType.cutout());
 
         ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.DOLL_CREEPER_GIRL.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.DOLL_ENDER_GIRL.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.DOLL_SLIME_GIRL.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.DOLL_SLIME_GIRL.get(), net.minecraft.client.renderer.RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.DOLL_MAID.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.DOLL_DULLAHAN.get(), RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(GaiaRegistry.DOLL_MERMAID.get(), RenderType.cutout());
