@@ -107,7 +107,7 @@ tasks.register("prepareUpstream") {
             // Port NeoForge entity attachments/persistent summon markers to entity-owned state.
             if (f.name == "AbstractGaiaEntity.java") {
                 s = s.replace("import gaia.attachment.AttachmentHandler;\n", "");
-                s = s.replace("private Goal targetPlayerGoal;",
+                s = s.replace("protected Goal targetPlayerGoal;",
                     "private Goal targetPlayerGoal;\n\tprivate final Friended friendedData = new Friended();\n\tprivate boolean staffSummoned = false;\n\tprivate UUID staffSummoner = null;");
                 s = s.replace("AttachmentHandler.getFriended(this)", "friendedData");
                 s = s.replace('tag.putInt("Variant", getVariant());',
