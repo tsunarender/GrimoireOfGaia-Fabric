@@ -6,6 +6,7 @@ import gaia.registry.GaiaSounds;
 import io.github.fabricators_of_create.porting_lib.config.ConfigRegistry;
 import io.github.fabricators_of_create.porting_lib.config.ModConfig;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
 
 public final class GrimoireOfGaiaFabric implements ModInitializer {
     @Override
@@ -21,5 +22,8 @@ public final class GrimoireOfGaiaFabric implements ModInitializer {
 
         FabricSpawns.registerAttributesAndSpawns();
         FabricEvents.register();
+        if (FabricLoader.getInstance().isModLoaded("trinkets")) {
+            TrinketsCompat.register();
+        }
     }
 }
