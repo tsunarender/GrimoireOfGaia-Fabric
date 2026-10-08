@@ -43,7 +43,7 @@ tasks.register("prepareUpstream") {
         extractDir.mkdirs()
 
         if (!zipFile.exists()) {
-            new URL("https://codeload.github.com/Silentine/GrimoireOfGaia/zip/refs/heads/1.21").withInputStream { input ->
+            new URL("https://codeload.github.com/Silentine/GrimoireOfGaia/zip/93f503372490aaf1fb041eb6f33304d6a26add1d").withInputStream { input ->
                 zipFile.withOutputStream { output -> output << input }
             }
         }
