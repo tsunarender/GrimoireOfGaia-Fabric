@@ -95,72 +95,57 @@ tasks.register("prepareUpstream") {
         fileTree(new File(destination, "src/main/java")).matching { include "**/*.java" }.files.each { f ->
             def s = f.getText("UTF-8")
 
-            s = s.replace("gaia.fabric.compat.DeferredRegister", "io.github.fabricators_of_create.porting_lib.registry.DeferredRegister")
-            s = s.replace("gaia.fabric.compat.DeferredHolder", "io.github.fabricators_of_create.porting_lib.registry.DeferredHolder")
-            s = s.replace("gaia.fabric.compat.DeferredItem", "io.github.fabricators_of_create.porting_lib.registry.DeferredItem")
-            s = s.replace("gaia.fabric.compat.DeferredBlock", "io.github.fabricators_of_create.porting_lib.registry.DeferredBlock")
-            s = s.replace("gaia.fabric.compat.DeferredSpawnEggItem", "io.github.fabricators_of_create.porting_lib.util.DeferredSpawnEggItem")
-            s = s.replace("gaia.fabric.compat.SimpleTier", "io.github.fabricators_of_create.porting_lib.common.util.SimpleTier")
-            s = s.replace("net.neoforged.neoforge.common.ItemAbilities", "io.github.fabricators_of_create.porting_lib.tool.ItemAbilities")
-            s = s.replace("gaia.fabric.compat.Tags", "io.github.fabricators_of_create.porting_lib.tags.Tags")
-            s = s.replace("net.neoforged.neoforge.fluids.FluidType", "gaia.fabric.compat.FluidType")
-            s = s.replace("net.neoforged.neoforge.common.EffectCure", "gaia.fabric.compat.EffectCure")
-            s = s.replace("gaia.fabric.compat.EntityHooks", "io.github.fabricators_of_create.porting_lib.entity.EntityHooks")
-            s = s.replace("EventHooks.onEnderTeleport", "EntityHooks.onEnderTeleport")
+            // NeoForge registry APIs -> self-contained Fabric compatibility.
+            s = s.replace("net.neoforged.neoforge.registries.DeferredRegister", "gaia.fabric.compat.DeferredRegister")
+            s = s.replace("net.neoforged.neoforge.registries.DeferredHolder", "gaia.fabric.compat.DeferredHolder")
+            s = s.replace("net.neoforged.neoforge.registries.DeferredItem", "gaia.fabric.compat.DeferredItem")
+            s = s.replace("net.neoforged.neoforge.registries.DeferredBlock", "gaia.fabric.compat.DeferredBlock")
+            s = s.replace("net.neoforged.neoforge.common.DeferredSpawnEggItem", "gaia.fabric.compat.DeferredSpawnEggItem")
+            s = s.replace("net.neoforged.neoforge.common.SimpleTier", "gaia.fabric.compat.SimpleTier")
+            s = s.replace("net.neoforged.neoforge.common.Tags", "gaia.fabric.compat.Tags")
+            s = s.replace("net.neoforged.neoforge.event.EventHooks", "gaia.fabric.compat.EntityHooks")
+            s = s.replace("net.neoforged.neoforge.event.entity.EntityTeleportEvent", "gaia.fabric.compat.EntityTeleportEvent")
 
-            s = s.replace("EventHooks.canEntityGrief(this.level(), this)",
-                "this.level().getGameRules().getBoolean(net.minecraft.world.level.GameRules.RULE_MOBGRIEFING)")
-            s = s.replace("EventHooks.finalizeMobSpawn(mite, (ServerLevel) this.level(), this.level().getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, (SpawnGroupData) null)",
-                "mite.finalizeSpawn((ServerLevel) this.level(), this.level().getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, null)")
-            s = s.replace("EventHooks.finalizeMobSpawn(monster, (ServerLevel) this.level(), this.level().getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, (SpawnGroupData) null)",
-                "monster.finalizeSpawn((ServerLevel) this.level(), this.level().getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, null)")
-
+            // Vanilla/Fabric replacements for small NeoForge hooks.
+            s = s.replace("import net.neoforged.neoforge.common.ItemAbilities;\\n", "")
+            s = s.replace(".canPerformAction(ItemAbilities.SHIELD_BLOCK)", ".is(net.minecraft.world.item.Items.SHIELD)")
+            s = s.replace("import net.neoforged.neoforge.fluids.FluidType;\\n", "")
+            s = s.replace("isPushedByFluid(FluidType type)", "isPushedByFluid()")
+            s = s.replace("import net.neoforged.neoforge.items.ItemHandlerHelper;\\n", "")
             s = s.replace("ItemHandlerHelper.giveItemToPlayer(player, lootStack)",
-                "player.getInventory().placeItemBackInInventory(lootStack)")
+                          "player.getInventory().placeItemBackInInventory(lootStack)")
 
-            // Port NeoForge entity attachments/persistent summon markers to entity-owned state.
+            // Server hooks with direct vanilla equivalents.
+            s = s.replace("EventHooks.canEntityGrief(this.level(), this)",
+                          "this.level().getGameRules().getBoolean(net.minecraft.world.level.GameRules.RULE_MOBGRIEFING)")
+            s = s.replace("EventHooks.finalizeMobSpawn(mite, (ServerLevel) this.level(), this.level().getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, (SpawnGroupData) null)",
+                          "mite.finalizeSpawn((ServerLevel) this.level(), this.level().getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, null)")
+            s = s.replace("EventHooks.finalizeMobSpawn(monster, (ServerLevel) this.level(), this.level().getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, (SpawnGroupData) null)",
+                          "monster.finalizeSpawn((ServerLevel) this.level(), this.level().getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, null)")
+
+            // Optional-mod checks.
+            s = s.replace("ModList.get().isLoaded(\"curios\")",
+                          "net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded(\"trinkets\")")
+            s = s.replace("ModList.get().isLoaded(\"patchouli\")",
+                          "net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded(\"patchouli\")")
+
+            // Remove NeoForge event annotations/imports from excluded handlers or passive classes.
+            s = s.replace("@SubscribeEvent", "")
+            s = s.replace("@EventBusSubscriber", "")
+            s = s.readLines().findAll { line -> !line.trim().startsWith("import net.neoforged.") }.join("\n")
+
+            // Preserve summon state without NeoForge persistent data/attachments.
             if (f.name == "AbstractGaiaEntity.java") {
-                s = s.replace("import gaia.attachment.AttachmentHandler;\n", "");
                 s = s.replace("protected Goal targetPlayerGoal;",
-                    "protected Goal targetPlayerGoal;\n\tprivate final Friended friendedData = new Friended();\n\tprivate boolean staffSummoned = false;\n\tprivate UUID staffSummoner = null;");
-                s = s.replace("AttachmentHandler.getFriended(this)", "friendedData");
+                    "protected Goal targetPlayerGoal;\n\tprivate final Friended friendedData = new Friended();\n\tprivate boolean staffSummoned = false;\n\tprivate UUID staffSummoner = null;")
+                s = s.replace("AttachmentHandler.getFriended(this)", "friendedData")
                 s = s.replace('tag.putInt("Variant", getVariant());',
-                    'tag.putInt("Variant", getVariant());\n\t\ttag.put("Friended", friendedData.serializeNBT());\n\t\ttag.putBoolean("StaffSummoned", staffSummoned);\n\t\tif (staffSummoner != null) tag.putUUID("StaffSummoner", staffSummoner);');
-                s = s.replace("setVariant(variant);\n\t\t}\n\t\tsetupFriendGoals",
-                    'setVariant(variant);\n\t\t}\n\t\tif (tag.contains("Friended")) friendedData.deserializeNBT(tag.getCompound("Friended"));\n\t\tstaffSummoned = tag.getBoolean("StaffSummoned");\n\t\tif (tag.contains("StaffSummoner")) staffSummoner = tag.getUUID("StaffSummoner");\n\t\tsetupFriendGoals');
+                    'tag.putInt("Variant", getVariant());\n\t\ttag.put("Friended", friendedData.serializeNBT());\n\t\ttag.putBoolean("StaffSummoned", staffSummoned);\n\t\tif (staffSummoner != null) tag.putUUID("StaffSummoner", staffSummoner);')
+                s = s.replace('setVariant(variant);\n\t\t}\n\t\tsetupFriendGoals',
+                    'setVariant(variant);\n\t\t}\n\t\tif (tag.contains("Friended")) friendedData.deserializeNBT(tag.getCompound("Friended"));\n\t\tstaffSummoned = tag.getBoolean("StaffSummoned");\n\t\tif (tag.contains("StaffSummoner")) staffSummoner = tag.getUUID("StaffSummoner");\n\t\tsetupFriendGoals')
                 s = s.replace("\n\tpublic void onFriendlyChange(IFriended cap)",
-                    "\n\tpublic boolean isStaffSummoned() { return staffSummoned; }\n\n\tpublic void setStaffSummoned(boolean value) { this.staffSummoned = value; }\n\n\t@Nullable\n\tpublic UUID getStaffSummoner() { return staffSummoner; }\n\n\tpublic void setStaffSummoner(@Nullable UUID value) { this.staffSummoner = value; }\n\n\tpublic void onFriendlyChange(IFriended cap)");
+                    "\n\tpublic boolean isStaffSummoned() { return staffSummoned; }\n\n\tpublic void setStaffSummoned(boolean value) { this.staffSummoned = value; }\n\n\t@Nullable\n\tpublic UUID getStaffSummoner() { return staffSummoner; }\n\n\tpublic void setStaffSummoner(@Nullable UUID value) { this.staffSummoner = value; }\n\n\tpublic void onFriendlyChange(IFriended cap)")
             }
-
-            if (f.name == "SummonStaffItem.java") {
-                s = s.replace("import gaia.Reference;\n", "");
-                s = s.replace("import net.minecraft.nbt.CompoundTag;\n", "");
-                s = s.replace("import gaia.fabric.compat.EntityHooks;\n", "");
-                s = s.replace("import net.minecraft.world.entity.Mob;\n",
-                    "import net.minecraft.world.entity.Mob;\nimport gaia.entity.AbstractGaiaEntity;\n");
-                s = s.replace(
-                    "EventHooks.finalizeMobSpawn(summon, (ServerLevel) level, level.getCurrentDifficultyAt(spawnPos), MobSpawnType.MOB_SUMMONED, (SpawnGroupData) null);",
-                    "summon.finalizeSpawn((ServerLevel) level, level.getCurrentDifficultyAt(spawnPos), MobSpawnType.MOB_SUMMONED, null);");
-                s = s.replaceAll(
-                    /CompoundTag tag = summon\.getPersistentData\(\);\s*tag\.putBoolean\(Reference\.SUMMONED_TAG, true\);\s*tag\.putUUID\(Reference\.SUMMONER_TAG, livingEntity\.getUUID\(\)\);/,
-                    "if (summon instanceof AbstractGaiaEntity gaiaSummon) {\\n\\t\\t\\t\\tgaiaSummon.setStaffSummoned(true);\\n\\t\\t\\t\\tgaiaSummon.setStaffSummoner(livingEntity.getUUID());\\n\\t\\t\\t}"
-                );
-                s = s.replace(
-                    "!tag.contains(Reference.SUMMONED_TAG)",
-                    "!(summon instanceof AbstractGaiaEntity gaiaSummon && gaiaSummon.isStaffSummoned())");
-            }
-
-            // Client-side/NeoForge event annotations are replaced by explicit Fabric entrypoints.
-            s = s.replace("import net.neoforged.bus.api.SubscribeEvent;\n", "")
-            s = s.replace("import net.neoforged.fml.common.EventBusSubscriber;\n", "")
-            s = s.replace("import net.neoforged.fml.ModList;\n", "")
-            s = s.replace("ModList.get().isLoaded(\"curios\")", "net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded(\"trinkets\")")
-            s = s.replace("ModList.get().isLoaded(\"patchouli\")", "net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded(\"patchouli\")")
-            s = s.replace("import net.neoforged.fml.ModList;\r\n", "")
-
-            // Remove remaining optional NeoForge-only imports where the associated feature is omitted on Fabric.
-            s = s.replace("import net.neoforged.neoforge.common.ItemAbilities;\n", "")
-            s = s.replace("import net.neoforged.neoforge.fluids.FluidType;\n", "")
 
             f.write(s, "UTF-8")
         }
