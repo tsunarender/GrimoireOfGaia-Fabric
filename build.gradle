@@ -11,6 +11,7 @@ base { archivesName = project.archives_base_name }
 repositories {
     mavenCentral()
     maven { url = "https://maven.terraformersmc.com/releases/" }
+    maven { url = "https://maven.ladysnake.org/releases" }
     maven { url = "https://maven.terraformersmc.com/releases/" }
 }
 
@@ -134,6 +135,7 @@ tasks.register("prepareUpstream") {
                           "net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded(\"patchouli\")")
 
             // Remove NeoForge event annotations/imports from excluded handlers or passive classes.
+            s = s.replace("import gaia.attachment.AttachmentHandler;\\n", "")
             s = s.replace("@SubscribeEvent", "")
             s = s.replace("@EventBusSubscriber", "")
             s = s.readLines().findAll { line -> !line.trim().startsWith("import net.neoforged.") }.join("\n")
