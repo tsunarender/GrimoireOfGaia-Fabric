@@ -91,6 +91,7 @@ tasks.register("prepareUpstream") {
             s = s.replace("net.neoforged.neoforge.common.ItemAbilities", "io.github.fabricators_of_create.porting_lib.tool.ItemAbilities")
             s = s.replace("net.neoforged.neoforge.common.Tags", "io.github.fabricators_of_create.porting_lib.tags.Tags")
             s = s.replace("net.neoforged.neoforge.fluids.FluidType", "io.github.fabricators_of_create.porting_lib.fluids.FluidType")
+            s = s.replace("net.neoforged.neoforge.common.EffectCure", "io.github.fabricators_of_create.porting_lib.entity.EffectCure")
             s = s.replace("net.neoforged.neoforge.event.EventHooks", "io.github.fabricators_of_create.porting_lib.entity.EntityHooks")
             s = s.replace("EventHooks.onEnderTeleport", "EntityHooks.onEnderTeleport")
 
@@ -108,7 +109,7 @@ tasks.register("prepareUpstream") {
             if (f.name == "AbstractGaiaEntity.java") {
                 s = s.replace("import gaia.attachment.AttachmentHandler;\n", "");
                 s = s.replace("protected Goal targetPlayerGoal;",
-                    "private Goal targetPlayerGoal;\n\tprivate final Friended friendedData = new Friended();\n\tprivate boolean staffSummoned = false;\n\tprivate UUID staffSummoner = null;");
+                    "protected Goal targetPlayerGoal;\n\tprivate final Friended friendedData = new Friended();\n\tprivate boolean staffSummoned = false;\n\tprivate UUID staffSummoner = null;");
                 s = s.replace("AttachmentHandler.getFriended(this)", "friendedData");
                 s = s.replace('tag.putInt("Variant", getVariant());',
                     'tag.putInt("Variant", getVariant());\n\t\ttag.put("Friended", friendedData.serializeNBT());\n\t\ttag.putBoolean("StaffSummoned", staffSummoned);\n\t\tif (staffSummoner != null) tag.putUUID("StaffSummoner", staffSummoner);');
