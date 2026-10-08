@@ -126,18 +126,34 @@ tasks.register("prepareUpstream") {
             s = s.replace(".getTemperature(blockPosition())", ".getBaseTemperature()")
             s = s.replace(".setPos(pos)", "")
             s = s.replace(".isEnderMask(player, null)", ".is(net.minecraft.world.item.Items.CARVED_PUMPKIN)")
-            s = s.replace("import net.minecraft.client.renderer.ItemBlockRenderTypes;", "import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;")
 
+            // Vanilla 1.21.1 API adjustments.
+            s = s.replace("CreativeModeTab.builder()", "CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0)")
+            s = s.replace("ItemTags.create(", "TagKey.create(Registries.ITEM, ")
+            s = s.replace("BlockTags.create(", "TagKey.create(Registries.BLOCK, ")
+            s = s.replace("import net.minecraft.tags.TagKey;", "import net.minecraft.tags.TagKey;\nimport net.minecraft.core.registries.Registries;")
+            s = s.replace(".effect(() -> new MobEffectInstance(", ".effect(new MobEffectInstance(")
+            s = s.replace(".getAsBoolean()", ".get()")
+            s = s.replace(".getFoodProperties(null)", ".get(net.minecraft.core.component.DataComponents.FOOD)")
+            s = s.replace("ProjectileUtil.getWeaponHoldingHand(shooter, item -> item instanceof net.minecraft.world.item.BowItem)", "ProjectileUtil.getWeaponHoldingHand(shooter, Items.BOW)")
+            s = s.replace("\t\tif (heldItem.getItem() instanceof BowItem bowItem)\n\t\t\tabstractarrow = bowItem.customArrow(abstractarrow, arrowStack, heldItem);\n", "")
+            s = s.replace("\t@Override\n\tpublic int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType) {", "\tpublic int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType) {")
+            s = s.replace("\t@Nullable\n\t@Override\n\tpublic EquipmentSlot getEquipmentSlot(ItemStack stack) {", "\t@Nullable\n\tpublic EquipmentSlot getEquipmentSlot(ItemStack stack) {")
             // Optional-mod checks.
             s = s.replace("ModList.get().isLoaded(\"curios\")",
                           "net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded(\"trinkets\")")
             s = s.replace("ModList.get().isLoaded(\"patchouli\")",
                           "net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded(\"patchouli\")")
+            s = s.replace("ModList.get().isLoaded(\"lootr\")",
+                          "net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded(\"lootr\")")
+            s = s.replace("ModList.get().isLoaded(\"thaumcraft\")",
+                          "net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded(\"thaumcraft\")")
+            s = s.replace("ModList.get().isLoaded(\"tconstruct\")",
+                          "net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded(\"tconstruct\")")
 
             // Remove NeoForge event annotations/imports from excluded handlers or passive classes.
             s = s.replace("javax.annotation.Nullable", "org.jetbrains.annotations.Nullable")
 
-            s = s.replace("import gaia.attachment.AttachmentHandler;", "")
             s = s.replace("@SubscribeEvent", "")
             s = s.replace("@EventBusSubscriber", "")
             s = s.readLines().findAll { line -> !line.trim().startsWith("import net.neoforged.") }.join("\n")
