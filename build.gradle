@@ -104,6 +104,37 @@ tasks.register("prepareUpstream") {
             s = s.replace("ItemHandlerHelper.giveItemToPlayer(player, lootStack)",
                 "player.getInventory().placeItemBackInInventory(lootStack)")
 
+            // Port NeoForge entity attachments/persistent summon markers to entity-owned state.
+            if (f.name == "AbstractGaiaEntity.java") {
+                s = s.replace("import gaia.attachment.AttachmentHandler;\n", "");
+                s = s.replace("private Goal targetPlayerGoal;",
+                    "private Goal targetPlayerGoal;\n\tprivate final Friended friendedData = new Friended();\n\tprivate boolean staffSummoned = false;\n\tprivate UUID staffSummoner = null;");
+                s = s.replace("AttachmentHandler.getFriended(this)", "friendedData");
+                s = s.replace('tag.putInt("Variant", getVariant());',
+                    'tag.putInt("Variant", getVariant());\n\t\ttag.put("Friended", friendedData.serializeNBT());\n\t\ttag.putBoolean("StaffSummoned", staffSummoned);\n\t\tif (staffSummoner != null) tag.putUUID("StaffSummoner", staffSummoner);');
+                s = s.replace("setVariant(variant);\n\t\t}\n\t\tsetupFriendGoals",
+                    'setVariant(variant);\n\t\t}\n\t\tif (tag.contains("Friended")) friendedData.deserializeNBT(tag.getCompound("Friended"));\n\t\tstaffSummoned = tag.getBoolean("StaffSummoned");\n\t\tif (tag.contains("StaffSummoner")) staffSummoner = tag.getUUID("StaffSummoner");\n\t\tsetupFriendGoals');
+                s = s.replace("\n\tpublic void onFriendlyChange(IFriended cap)",
+                    "\n\tpublic boolean isStaffSummoned() { return staffSummoned; }\n\n\tpublic void setStaffSummoned(boolean value) { this.staffSummoned = value; }\n\n\t@Nullable\n\tpublic UUID getStaffSummoner() { return staffSummoner; }\n\n\tpublic void setStaffSummoner(@Nullable UUID value) { this.staffSummoner = value; }\n\n\tpublic void onFriendlyChange(IFriended cap)");
+            }
+
+            if (f.name == "SummonStaffItem.java") {
+                s = s.replace("import gaia.Reference;\n", "");
+                s = s.replace("import net.minecraft.nbt.CompoundTag;\n", "");
+                s = s.replace("import net.neoforged.neoforge.event.EventHooks;\n", "");
+                s = s.replace("import net.minecraft.world.entity.Mob;\n",
+                    "import net.minecraft.world.entity.Mob;\nimport gaia.entity.AbstractGaiaEntity;\n");
+                s = s.replace(
+                    "EventHooks.finalizeMobSpawn(summon, (ServerLevel) level, level.getCurrentDifficultyAt(spawnPos), MobSpawnType.MOB_SUMMONED, (SpawnGroupData) null);",
+                    "summon.finalizeSpawn((ServerLevel) level, level.getCurrentDifficultyAt(spawnPos), MobSpawnType.MOB_SUMMONED, null);");
+                s = s.replace(
+                    "CompoundTag tag = summon.getPersistentData();\n\t\t\ttag.putBoolean(Reference.SUMMONED_TAG, true);\n\t\t\ttag.putUUID(Reference.SUMMONER_TAG, livingEntity.getUUID());",
+                    "if (summon instanceof AbstractGaiaEntity gaiaSummon) {\n\t\t\t\tgaiaSummon.setStaffSummoned(true);\n\t\t\t\tgaiaSummon.setStaffSummoner(livingEntity.getUUID());\n\t\t\t}");
+                s = s.replace(
+                    "!tag.contains(Reference.SUMMONED_TAG)",
+                    "!(summon instanceof AbstractGaiaEntity gaiaSummon && gaiaSummon.isStaffSummoned())");
+            }
+
             // Client-side/NeoForge event annotations are replaced by explicit Fabric entrypoints.
             s = s.replace("import net.neoforged.bus.api.SubscribeEvent;\n", "")
             s = s.replace("import net.neoforged.fml.common.EventBusSubscriber;\n", "")
