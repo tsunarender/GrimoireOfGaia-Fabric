@@ -161,20 +161,8 @@ tasks.register("prepareUpstream") {
 
             // Preserve summon state without NeoForge persistent data/attachments.
             if (f.name == "Bee.java") {
-                s = s.replace("import gaia.attachment.AttachmentHandler;", "")
                 s = s.replace("Friended friended = AttachmentHandler.getFriended(this);", "boolean __gaiaFriendly = isFriendly();")
                 s = s.replace("if (!friended.isFriendly())", "if (!__gaiaFriendly)")
-            }
-
-            if (f.name == "SummonStaffItem.java") {
-                s = s.replace("CompoundTag tag = summon.getPersistentData();", "")
-                s = s.replace("tag.putBoolean(Reference.SUMMONED_TAG, true);", "")
-                s = s.replace("tag.putUUID(Reference.SUMMONER_TAG, livingEntity.getUUID());", "")
-                s = s.replaceAll("(?s)\\s*summon\\.targetSelector\\.getAvailableGoals\\(\\)\\.removeIf.*?\\s*\\}\)\\);", "")
-                s = s.replaceAll("(?s)\\s*\\@Override\\s*\\n\\s*public boolean isPrimaryItemFor\\(ItemStack stack, Holder<Enchantment> enchantment\\) \\{.*?\\n\\s*\\}", "")
-            }
-            if (f.name == "MagicStaffItem.java") {
-                s = s.replaceAll("(?s)\\s*\\@Override\\s*\\n\\s*public boolean isPrimaryItemFor\\(ItemStack stack, Holder<Enchantment> enchantment\\) \\{.*?\\n\\s*\\}", "")
             }
 
             if (f.name == "AbstractGaiaEntity.java") {
