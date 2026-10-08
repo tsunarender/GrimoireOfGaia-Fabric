@@ -139,6 +139,8 @@ tasks.register("prepareUpstream") {
             s = s.replace("import net.neoforged.bus.api.SubscribeEvent;\n", "")
             s = s.replace("import net.neoforged.fml.common.EventBusSubscriber;\n", "")
             s = s.replace("import net.neoforged.fml.ModList;\n", "")
+            s = s.replace("ModList.get().isLoaded(\"curios\")", "net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded(\"trinkets\")")
+            s = s.replace("ModList.get().isLoaded(\"patchouli\")", "net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded(\"patchouli\")")
             s = s.replace("import net.neoforged.fml.ModList;\r\n", "")
 
             // Remove remaining optional NeoForge-only imports where the associated feature is omitted on Fabric.
