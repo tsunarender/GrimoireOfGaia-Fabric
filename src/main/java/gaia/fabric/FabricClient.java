@@ -175,7 +175,7 @@ public final class FabricClient {
                     livingEntity != null && livingEntity.isUsingItem() && livingEntity.getUseItem() == stack ? 1.0F : 0.0F);
             ItemProperties.register(GaiaRegistry.SEASHELL_HAIRPIN.get(), ResourceLocation.parse("available"), (stack, level, livingEntity, i) ->
                     stack.getDamageValue() == 0 ? 1.0F : 0.0F);
-        });
+        }
         registerEntityRenders();
         registerLayerDefinitions();
     }
