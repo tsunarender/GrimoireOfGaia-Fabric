@@ -10,6 +10,27 @@ base { archivesName = project.archives_base_name }
 
 repositories {
     mavenCentral()
+    maven { url = "https://maven.terraformersmc.com/releases/" }
+    maven { url = "https://maven.terraformersmc.com/releases/" }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+}ugins {
+    id 'fabric-loom' version '1.10.5'
+    id 'maven-publish'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base { archivesName = project.archives_base_name }
+
+repositories {
+    mavenCentral()
     maven { url = "https://mvn.devos.one/releases/" }
     maven { url = "https://maven.terraformersmc.com/releases/" }
 }
@@ -20,7 +41,6 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-    modImplementation(include("io.github.fabricators_of_create.Porting-Lib:porting_lib:${project.porting_lib_version}"))
     modCompileOnly "dev.emi:trinkets:3.10.0"
 }
 def upstreamZip = layout.buildDirectory.file("upstream/gaia-1.21.zip")
@@ -75,17 +95,17 @@ tasks.register("prepareUpstream") {
         fileTree(new File(destination, "src/main/java")).matching { include "**/*.java" }.files.each { f ->
             def s = f.getText("UTF-8")
 
-            s = s.replace("net.neoforged.neoforge.registries.DeferredRegister", "io.github.fabricators_of_create.porting_lib.registry.DeferredRegister")
-            s = s.replace("net.neoforged.neoforge.registries.DeferredHolder", "io.github.fabricators_of_create.porting_lib.registry.DeferredHolder")
-            s = s.replace("net.neoforged.neoforge.registries.DeferredItem", "io.github.fabricators_of_create.porting_lib.registry.DeferredItem")
-            s = s.replace("net.neoforged.neoforge.registries.DeferredBlock", "io.github.fabricators_of_create.porting_lib.registry.DeferredBlock")
-            s = s.replace("net.neoforged.neoforge.common.DeferredSpawnEggItem", "io.github.fabricators_of_create.porting_lib.util.DeferredSpawnEggItem")
-            s = s.replace("net.neoforged.neoforge.common.SimpleTier", "io.github.fabricators_of_create.porting_lib.common.util.SimpleTier")
+            s = s.replace("gaia.fabric.compat.DeferredRegister", "io.github.fabricators_of_create.porting_lib.registry.DeferredRegister")
+            s = s.replace("gaia.fabric.compat.DeferredHolder", "io.github.fabricators_of_create.porting_lib.registry.DeferredHolder")
+            s = s.replace("gaia.fabric.compat.DeferredItem", "io.github.fabricators_of_create.porting_lib.registry.DeferredItem")
+            s = s.replace("gaia.fabric.compat.DeferredBlock", "io.github.fabricators_of_create.porting_lib.registry.DeferredBlock")
+            s = s.replace("gaia.fabric.compat.DeferredSpawnEggItem", "io.github.fabricators_of_create.porting_lib.util.DeferredSpawnEggItem")
+            s = s.replace("gaia.fabric.compat.SimpleTier", "io.github.fabricators_of_create.porting_lib.common.util.SimpleTier")
             s = s.replace("net.neoforged.neoforge.common.ItemAbilities", "io.github.fabricators_of_create.porting_lib.tool.ItemAbilities")
-            s = s.replace("net.neoforged.neoforge.common.Tags", "io.github.fabricators_of_create.porting_lib.tags.Tags")
-            s = s.replace("net.neoforged.neoforge.fluids.FluidType", "io.github.fabricators_of_create.porting_lib.fluids.FluidType")
-            s = s.replace("net.neoforged.neoforge.common.EffectCure", "io.github.fabricators_of_create.porting_lib.entity.EffectCure")
-            s = s.replace("net.neoforged.neoforge.event.EventHooks", "io.github.fabricators_of_create.porting_lib.entity.EntityHooks")
+            s = s.replace("gaia.fabric.compat.Tags", "io.github.fabricators_of_create.porting_lib.tags.Tags")
+            s = s.replace("net.neoforged.neoforge.fluids.FluidType", "gaia.fabric.compat.FluidType")
+            s = s.replace("net.neoforged.neoforge.common.EffectCure", "gaia.fabric.compat.EffectCure")
+            s = s.replace("gaia.fabric.compat.EntityHooks", "io.github.fabricators_of_create.porting_lib.entity.EntityHooks")
             s = s.replace("EventHooks.onEnderTeleport", "EntityHooks.onEnderTeleport")
 
             s = s.replace("EventHooks.canEntityGrief(this.level(), this)",
@@ -115,7 +135,7 @@ tasks.register("prepareUpstream") {
             if (f.name == "SummonStaffItem.java") {
                 s = s.replace("import gaia.Reference;\n", "");
                 s = s.replace("import net.minecraft.nbt.CompoundTag;\n", "");
-                s = s.replace("import net.neoforged.neoforge.event.EventHooks;\n", "");
+                s = s.replace("import gaia.fabric.compat.EntityHooks;\n", "");
                 s = s.replace("import net.minecraft.world.entity.Mob;\n",
                     "import net.minecraft.world.entity.Mob;\nimport gaia.entity.AbstractGaiaEntity;\n");
                 s = s.replace(
