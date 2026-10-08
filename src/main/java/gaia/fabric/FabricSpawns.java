@@ -139,9 +139,7 @@ public final class FabricSpawns {
         SpawnPlacements.register(GaiaRegistry.TRADER.getEntityType(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Trader::checkMobSpawnRules);
         SpawnPlacements.register(GaiaRegistry.CREEPER_GIRL.getEntityType(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, CreeperGirl::checkMobSpawnRules);
         SpawnPlacements.register(GaiaRegistry.ENDER_GIRL.getEntityType(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, EnderGirl::checkMobSpawnRules);
-        SpawnPlacements.register(GaiaRegistry.HOLSTAURUS.getEntityType(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Holstaurus::checkMobSpawnRules);
         SpawnPlacements.register(GaiaRegistry.SLIME_GIRL.getEntityType(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SlimeGirl::checkMobSpawnRules);
-        SpawnPlacements.register(GaiaRegistry.WERESHEEP.getEntityType(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Weresheep::checkMobSpawnRules);
         SpawnPlacements.register(GaiaRegistry.HORSE.getEntityType(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
     }
 }
