@@ -1,0 +1,29 @@
+package gaia.item.fuel;
+
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+
+import java.util.List;
+
+public class FuelItem extends Item {
+    private final int burnTime;
+
+    public FuelItem(Properties properties, int burnTime) {
+        super(properties);
+        this.burnTime = burnTime;
+    }
+
+    public int getBurnTime(ItemStack itemStack) {
+        return burnTime;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> list, TooltipFlag flag) {
+        super.appendHoverText(stack, context, list, flag);
+        list.add(Component.translatable("text.grimoireofgaia.fuel_for_seconds", burnTime / 2)
+                .withStyle(ChatFormatting.GRAY));
+    }
+}
