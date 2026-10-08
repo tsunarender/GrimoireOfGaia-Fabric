@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:is_mountain",
+    "minecraft:snowy_slopes",
+    "minecraft:meadow",
+    "minecraft:grove",
+    "minecraft:cherry_grove",
+    "minecraft:jagged_peaks",
+    "minecraft:frozen_peaks",
+    "minecraft:stony_peaks"
+  ]
+}
