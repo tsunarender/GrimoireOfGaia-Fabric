@@ -2,15 +2,32 @@ plugins {
     id 'fabric-loom' version '1.10.5'
     id 'maven-publish'
 }
+
 version = project.mod_version
 group = project.maven_group
+
 base { archivesName = project.archives_base_name }
-repositories { mavenCentral() }
+
+repositories {
+    mavenCentral()
+    maven { url = "https://mvn.devos.one/releases/" }
+}
+
 dependencies {
-    minecraft "com.mojang:minecraft:\${project.minecraft_version}"
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings loom.officialMojangMappings()
-    modImplementation "net.fabricmc:fabric-loader:\${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:\${project.fabric_api_version}"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+    modImplementation(include("io.github.fabricators_of_create.Porting-Lib:base:${project.porting_lib_version}"))
+    modImplementation(include("io.github.fabricators_of_create.Porting-Lib:common:${project.porting_lib_version}"))
+    modImplementation(include("io.github.fabricators_of_create.Porting-Lib:registry:${project.porting_lib_version}"))
+    modImplementation(include("io.github.fabricators_of_create.Porting-Lib:attributes:${project.porting_lib_version}"))
+    modImplementation(include("io.github.fabricators_of_create.Porting-Lib:config:${project.porting_lib_version}"))
+    modImplementation(include("io.github.fabricators_of_create.Porting-Lib:entity:${project.porting_lib_version}"))
+    modImplementation(include("io.github.fabricators_of_create.Porting-Lib:fluids:${project.porting_lib_version}"))
+    modImplementation(include("io.github.fabricators_of_create.Porting-Lib:item_abilities:${project.porting_lib_version}"))
+    modImplementation(include("io.github.fabricators_of_create.Porting-Lib:tags:${project.porting_lib_version}"))
 }
 
 def upstreamZip = layout.buildDirectory.file("upstream/gaia-1.21.zip")
@@ -24,31 +41,35 @@ tasks.register("prepareUpstream") {
         def extractDir = upstreamRoot.get().asFile
         zipFile.parentFile.mkdirs()
         extractDir.mkdirs()
+
         if (!zipFile.exists()) {
             new URL("https://codeload.github.com/Silentine/GrimoireOfGaia/zip/refs/heads/1.21").withInputStream { input ->
                 zipFile.withOutputStream { output -> output << input }
             }
         }
+
         def sourceRoot = new File(extractDir, "GrimoireOfGaia-1.21")
         if (!sourceRoot.exists()) {
             copy { from zipTree(zipFile); into extractDir }
         }
+
         def destination = portedRoot.get().asFile
         delete destination
         destination.mkdirs()
+
         def excluded = [
             "src/main/java/gaia/GrimoireOfGaia.java",
-            "src/main/java/gaia/config/GaiaConfig.java",
             "src/main/java/gaia/attachment/AttachmentHandler.java",
-            "src/main/java/gaia/attachment/friended/Friended.java",
             "src/main/java/gaia/registry/GaiaSpawning.java",
             "src/main/java/gaia/registry/GaiaDataSerializers.java",
             "src/main/java/gaia/registry/GaiaModifiers.java",
             "src/main/java/gaia/modifier/**",
             "src/main/java/gaia/handler/**",
             "src/main/java/gaia/compat/curios/**",
-            "src/main/java/gaia/datagen/**"
+            "src/main/java/gaia/datagen/**",
+            "src/main/java/gaia/client/ClientHandler.java"
         ]
+
         copy {
             from sourceRoot
             into destination
@@ -57,16 +78,45 @@ tasks.register("prepareUpstream") {
             exclude "src/main/resources/META-INF/accesstransformer.cfg"
             exclude "src/main/resources/data/grimoireofgaia/neoforge/**"
         }
+
         fileTree(new File(destination, "src/main/java")).matching { include "**/*.java" }.files.each { f ->
             def s = f.getText("UTF-8")
+
+            s = s.replace("net.neoforged.neoforge.registries.DeferredRegister", "io.github.fabricators_of_create.porting_lib.registry.DeferredRegister")
+            s = s.replace("net.neoforged.neoforge.registries.DeferredHolder", "io.github.fabricators_of_create.porting_lib.registry.DeferredHolder")
+            s = s.replace("net.neoforged.neoforge.registries.DeferredItem", "io.github.fabricators_of_create.porting_lib.registry.DeferredItem")
+            s = s.replace("net.neoforged.neoforge.registries.DeferredBlock", "io.github.fabricators_of_create.porting_lib.registry.DeferredBlock")
+            s = s.replace("net.neoforged.neoforge.common.DeferredSpawnEggItem", "io.github.fabricators_of_create.porting_lib.util.DeferredSpawnEggItem")
+            s = s.replace("net.neoforged.neoforge.common.SimpleTier", "io.github.fabricators_of_create.porting_lib.common.util.SimpleTier")
+            s = s.replace("net.neoforged.neoforge.common.ItemAbilities", "io.github.fabricators_of_create.porting_lib.tool.ItemAbilities")
+            s = s.replace("net.neoforged.neoforge.common.Tags", "io.github.fabricators_of_create.porting_lib.tags.Tags")
+            s = s.replace("net.neoforged.neoforge.fluids.FluidType", "io.github.fabricators_of_create.porting_lib.fluids.FluidType")
+            s = s.replace("net.neoforged.neoforge.event.EventHooks", "io.github.fabricators_of_create.porting_lib.entity.EntityHooks")
+            s = s.replace("EventHooks.onEnderTeleport", "EntityHooks.onEnderTeleport")
+
+            s = s.replace("EventHooks.canEntityGrief(this.level(), this)",
+                "this.level().getGameRules().getBoolean(net.minecraft.world.level.GameRules.RULE_MOBGRIEFING)")
+            s = s.replace("EventHooks.finalizeMobSpawn(mite, (ServerLevel) this.level(), this.level().getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, (SpawnGroupData) null)",
+                "mite.finalizeSpawn((ServerLevel) this.level(), this.level().getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, null)")
+            s = s.replace("EventHooks.finalizeMobSpawn(monster, (ServerLevel) this.level(), this.level().getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, (SpawnGroupData) null)",
+                "monster.finalizeSpawn((ServerLevel) this.level(), this.level().getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, null)")
+
+            s = s.replace("ItemHandlerHelper.giveItemToPlayer(player, lootStack)",
+                "player.getInventory().placeItemBackInInventory(lootStack)")
+
+            // Client-side/NeoForge event annotations are replaced by explicit Fabric entrypoints.
+            s = s.replace("import net.neoforged.bus.api.SubscribeEvent;\n", "")
+            s = s.replace("import net.neoforged.fml.common.EventBusSubscriber;\n", "")
+            s = s.replace("import net.neoforged.fml.ModList;\n", "")
+            s = s.replace("import net.neoforged.fml.ModList;\r\n", "")
+
+            // Remove remaining optional NeoForge-only imports where the associated feature is omitted on Fabric.
             s = s.replace("import net.neoforged.neoforge.common.ItemAbilities;\n", "")
             s = s.replace("import net.neoforged.neoforge.fluids.FluidType;\n", "")
-            s = s.replace(".canPerformAction(ItemAbilities.SHIELD_BLOCK)", ".is(net.minecraft.world.item.Items.SHIELD)")
-            s = s.replace("isPushedByFluid(FluidType type)", "isPushedByFluid()")
-            s = s.replace("DeferredRegister.create(Registries.CREATIVE_MODE_TAB, GrimoireOfGaia.MOD_ID)",
-                    "DeferredRegister.create(BuiltInRegistries.CREATIVE_MODE_TAB, GrimoireOfGaia.MOD_ID)")
+
             f.write(s, "UTF-8")
         }
+
         copy { from project.file("src/main/java"); into new File(destination, "src/main/java") }
         copy { from project.file("src/main/resources"); into new File(destination, "src/main/resources") }
         copy {
@@ -76,6 +126,7 @@ tasks.register("prepareUpstream") {
         }
     }
 }
+
 sourceSets {
     main {
         java { srcDir new File(portedRoot.get().asFile, "src/main/java") }
@@ -85,13 +136,23 @@ sourceSets {
         }
     }
 }
+
 tasks.named("compileJava").configure { dependsOn tasks.named("prepareUpstream") }
 tasks.named("processResources").configure {
     dependsOn tasks.named("prepareUpstream")
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     filesMatching("fabric.mod.json") { expand(version: project.version) }
 }
+
 tasks.withType(JavaCompile).configureEach {
     options.encoding = "UTF-8"
     options.release = 21
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
 }
