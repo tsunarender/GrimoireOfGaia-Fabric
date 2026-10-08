@@ -47,6 +47,7 @@ public class DeferredRegister<T> {
 
     public <I extends T> DeferredHolder<T, I> register(String name, Supplier<? extends I> supplier) {
         DeferredHolder<T, I> holder = new DeferredHolder<>(supplier);
+        holder.setName(name);
         entries.put(name, holder);
         return holder;
     }
@@ -73,6 +74,7 @@ public class DeferredRegister<T> {
         @Override
         public <I extends Item> DeferredItem<I> register(String name, Supplier<? extends I> supplier) {
             DeferredItem<I> holder = new DeferredItem<>(supplier);
+            holder.setName(name);
             entries.put(name, holder);
             return holder;
         }
@@ -82,8 +84,7 @@ public class DeferredRegister<T> {
         }
 
         public <B extends Block> DeferredItem<BlockItem> registerSimpleBlockItem(DeferredBlock<B> block, Item.Properties properties) {
-            return register("BLOCK_ITEM_PLACEHOLDER_" + entries.size(),
-                    () -> new BlockItem(block.get(), properties)) ;
+            return register(block.getName(), () -> new BlockItem(block.get(), properties));
         }
     }
 
@@ -95,6 +96,7 @@ public class DeferredRegister<T> {
         @Override
         public <B extends Block> DeferredBlock<B> register(String name, Supplier<? extends B> supplier) {
             DeferredBlock<B> holder = new DeferredBlock<>(supplier);
+            holder.setName(name);
             entries.put(name, holder);
             return holder;
         }
