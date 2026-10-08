@@ -112,6 +112,22 @@ tasks.register("prepareUpstream") {
             s = s.replace("EventHooks.finalizeMobSpawn(monster, (ServerLevel) this.level(), this.level().getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, (SpawnGroupData) null)",
                           "monster.finalizeSpawn((ServerLevel) this.level(), this.level().getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, null)")
 
+            // Fabric compatibility for NeoForge-only convenience APIs.
+            s = s.replace("EventHooks.", "EntityHooks.")
+            s = s.replace("ItemAbilities.AXE_DIG", "/*AXE*/")
+            s = s.replace("ItemAbilities.SHOVEL_DIG", "/*SHOVEL*/")
+            s = s.replace("ItemAbilities.PICKAXE_DIG", "/*PICKAXE*/")
+            s = s.replace("ItemAbilities.SHIELD_BLOCK", "/*SHIELD*/")
+            s = s.replace("itemstack.canPerformAction(/*AXE*/)", "itemstack.getItem() instanceof net.minecraft.world.item.AxeItem")
+            s = s.replace("itemstack.canPerformAction(/*SHOVEL*/)", "itemstack.getItem() instanceof net.minecraft.world.item.ShovelItem")
+            s = s.replace("itemstack.canPerformAction(/*PICKAXE*/)", "itemstack.getItem() instanceof net.minecraft.world.item.PickaxeItem")
+            s = s.replace("itemstack.canPerformAction(/*SHIELD*/)", "itemstack.getItem() instanceof net.minecraft.world.item.ShieldItem")
+            s = s.replace("heldStack.canPerformAction(/*SHOVEL*/)", "heldStack.getItem() instanceof net.minecraft.world.item.ShovelItem")
+            s = s.replace(".getTemperature(blockPosition())", ".getBaseTemperature()")
+            s = s.replace(".setPos(pos)", "")
+            s = s.replace(".isEnderMask(player, null)", ".is(net.minecraft.world.item.Items.CARVED_PUMPKIN)")
+            s = s.replace("import net.minecraft.client.renderer.ItemBlockRenderTypes;", "import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;")
+
             // Optional-mod checks.
             s = s.replace("ModList.get().isLoaded(\"curios\")",
                           "net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded(\"trinkets\")")
