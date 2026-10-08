@@ -11,7 +11,7 @@ public final class GrimoireOfGaiaFabric implements ModInitializer {
         GaiaRegistry.BLOCKS.register();
         GaiaRegistry.ITEMS.register();
         GaiaRegistry.ENTITIES.register();
-        GaiaRegistry.CREATIVE_MODE_TABS.register();
+        GaiaCreativeTab.register();
         GaiaSounds.SOUND_EVENTS.register();
 
         FabricSpawns.registerAttributesAndSpawns();
