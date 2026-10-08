@@ -156,6 +156,121 @@ tasks.register("prepareUpstream") {
 
         copy { from project.file("src/main/java"); into new File(destination, "src/main/java") }
         copy { from project.file("src/main/resources"); into new File(destination, "src/main/resources") }
+        def quoteJavaString = { value ->
+            '"' + value.toString().replace('\\', '\\\\').replace('"', '\\"') + '"'
+        }
+
+        // Convert NeoForge biome modifiers to Fabric BiomeModifications.
+        def biomeModifierDir = new File(sourceRoot, "src/generated/resources/data/grimoireofgaia/neoforge/biome_modifier")
+        def generatedBiomeJava = new File(destination, "src/main/java/gaia/fabric/FabricBiomeSpawns.java")
+        generatedBiomeJava.parentFile.mkdirs()
+        def modifierEntries = []
+
+        if (biomeModifierDir.exists()) {
+            biomeModifierDir.eachFileMatch(~/.*\.json/) { jsonFile ->
+                def json = new groovy.json.JsonSlurper().parse(jsonFile)
+                def whitelist = (json.whitelist ?: []) as List
+                def blacklist = (json.blacklist ?: []) as List
+                def spawners = json.spawners instanceof List ? json.spawners : [json.spawners]
+
+                spawners.each { spawner ->
+                    def selector = "BiomeSelectors.all()"
+                    whitelist.each { raw ->
+                        def value = raw.toString()
+                        if (value.startsWith("#")) {
+                            selector += ".and(BiomeSelectors.tag(TagKey.create(Registries.BIOME, ResourceLocation.parse(" +
+                                    quoteJavaString(value.substring(1)) + "))))"
+                        } else {
+                            selector += ".and(BiomeSelectors.includeByKey(ResourceKey.create(Registries.BIOME, ResourceLocation.parse(" +
+                                    quoteJavaString(value) + "))))"
+                        }
+                    }
+                    blacklist.each { raw ->
+                        def value = raw.toString()
+                        if (value.startsWith("#")) {
+                            selector += ".and(BiomeSelectors.tag(TagKey.create(Registries.BIOME, ResourceLocation.parse(" +
+                                    quoteJavaString(value.substring(1)) + "))).negate())"
+                        } else {
+                            selector += ".and(BiomeSelectors.includeByKey(ResourceKey.create(Registries.BIOME, ResourceLocation.parse(" +
+                                    quoteJavaString(value) + "))).negate())"
+                        }
+                    }
+
+                    def typeId = spawner.type.toString()
+                    def entityName = typeId.contains(":") ? typeId.substring(typeId.indexOf(":") + 1) : typeId
+                    def fieldName = entityName.toUpperCase(Locale.ROOT).replaceAll("[^A-Z0-9]+", "_")
+                    def weight = (spawner.weight ?: 0) as int
+                    def minCount = (spawner.minCount ?: 1) as int
+                    def maxCount = (spawner.maxCount ?: minCount) as int
+
+                    modifierEntries << """
+        BiomeModifications.addSpawn(
+                ${selector},
+                MobCategory.MONSTER,
+                GaiaRegistry.${fieldName}.getEntityType(),
+                ${weight},
+                ${minCount},
+                ${maxCount}
+        );"""
+                }
+            }
+        }
+
+        def biomeJava = """package gaia.fabric;
+
+import gaia.registry.GaiaRegistry;
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.MobCategory;
+
+public final class FabricBiomeSpawns {
+    private FabricBiomeSpawns() {}
+
+    public static void register() {
+${modifierEntries.join('\\n')}
+    }
+}
+"""
+        generatedBiomeJava.write(biomeJava, "UTF-8")
+
+        // Provide Fabric-side definitions for the Common Tags used by Gaia's NeoForge biome JSONs.
+        def commonBiomeTagValues = [
+            "is_plains": ["#minecraft:is_plains"],
+            "is_forest": ["#minecraft:is_forest"],
+            "is_mountain": ["#minecraft:is_mountain"],
+            "is_cold": ["#minecraft:is_icy", "#minecraft:is_taiga"],
+            "is_hot": ["#minecraft:is_desert", "#minecraft:is_savanna", "#minecraft:is_jungle", "#minecraft:is_badlands"],
+            "is_aquatic": ["#minecraft:is_ocean", "#minecraft:is_river", "#minecraft:is_swamp"],
+            "is_sandy": ["#minecraft:is_desert", "#minecraft:is_beach", "#minecraft:is_badlands"],
+            "is_dense_vegetation": ["#minecraft:is_forest", "#minecraft:is_jungle", "#minecraft:is_taiga", "#minecraft:is_swamp"],
+            "is_sparse_vegetation": ["#minecraft:is_plains", "#minecraft:is_savanna", "#minecraft:is_badlands"],
+            "is_tree/coniferous": ["#minecraft:is_taiga"]
+        ]
+
+        def usedCommonTags = [] as Set
+        if (biomeModifierDir.exists()) {
+            biomeModifierDir.eachFileMatch(~/.*\.json/) { jsonFile ->
+                def json = new groovy.json.JsonSlurper().parse(jsonFile)
+                ((json.whitelist ?: []) + (json.blacklist ?: [])).each { raw ->
+                    def value = raw.toString()
+                    if (value.startsWith("#c:")) usedCommonTags << value.substring(3)
+                }
+            }
+        }
+
+        usedCommonTags.each { tagPath ->
+            def values = commonBiomeTagValues[tagPath]
+            if (values != null) {
+                def tagFile = new File(destination, "src/main/resources/data/c/tags/worldgen/biome/" + tagPath + ".json")
+                tagFile.parentFile.mkdirs()
+                tagFile.write(groovy.json.JsonOutput.toJson([replace:false, values:values]), "UTF-8")
+            }
+        }
+
         copy {
             from new File(sourceRoot, "src/generated/resources")
             into new File(destination, "src/generated/resources")
